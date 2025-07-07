@@ -1,0 +1,44 @@
+#python
+import os
+import shlex
+import sys
+
+def file_args(inargs:list[str]) -> list[str]:
+  """Read arguments from files
+
+  :param list args: arguments to process
+  :returns list: replacement args
+
+  Arguments that begin with '@' are replaced with the contents
+  of an argument file or a single '@" followed by a filename.
+  Unless the file does not exists and then the argument is just
+  added as is.
+
+  Argument file syntax follows `shlex` semantics with comments
+  enabled.
+  
+  """
+  outargs = []
+  i = 0
+  while i < len(inargs):
+    arg = inargs[i]
+    if arg.startswith('@'):
+      filename = arg[1:] if arg != '@' else inargs[i+1] if i+1 < len(inargs) else None
+      if (not filename is None) and os.path.isfile(filename):
+        if len(outargs) == 0: outargs = inargs[:i]
+        with open(filename,'r') as fp:
+          outargs.extend(shlex.split(fp.read(), True, True))
+        i += 2 if arg == '@' else 1
+        continue
+    if len(outargs) > 0: outargs.append(inargs[i])
+    i += 1
+
+  if len(outargs) == 0: return inargs
+  return outargs
+
+
+if __name__ == '__main__':
+  sys.argv = file_args(sys.argv)
+  print(sys.argv)
+  # import doctest
+  # doctest.testmod()
