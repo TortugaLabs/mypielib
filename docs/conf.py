@@ -64,6 +64,7 @@ myst_enable_extensions = [
     'linkify',
     'substitution',
     'strikethrough',
+    'tasklist',
 ]
 myst_substitutions = {
   'version': version,

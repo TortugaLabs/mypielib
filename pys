@@ -19,7 +19,7 @@ pysetup() {
   	  --venv=*) pyenvdir=${1#--venv=} ;;
   	  --ospkgs=*) ospkgs="$ospkgs $(echo "${1#--ospkgs=}" | sed -e s'/#.*$//')" ;;
   	  --pkgs=*) pippkgs="$pippkgs $(echo "${1#--pkgs=}" | sed -e s'/#.*$//')" ;;
-  	  --reqs=*) reqs="${1#--reqs=}" ;;
+  	  --reqs=*) reqs="$reqs ${1#--reqs=}" ;;
   	  --reinstall) reinstall=true ; break ;;
   	  --)
     	shift
@@ -49,8 +49,11 @@ pysetup() {
   	echo '>>> OS:' "$ospkgs"
   	echo '>>> PIP:' "$pippkgs"
   	if [ -n "$reqs" ] ; then
-  	  echo '>>> REQS:' "$reqs"
-  	  cat "$reqs" 2>/dev/null
+	  for r in $reqs
+	  do
+	    echo '>>> REQS:' "$r"
+	    cat "$r" 2>/dev/null
+	  done
   	fi
   	echo '>>> pysetup'
   	declare -f pysetup || :
@@ -85,7 +88,12 @@ pysetup() {
   (
     . "$pyenvdir"/bin/activate
     [ -n "$pippkgs" ] && pip install $pippkgs
-    [ -n "$reqs" ] && pip install --requirement "$reqs"
+    if [ -n "$reqs" ] ; then
+      for requirement in $reqs
+      do
+	pip install --requirement "$requirement"
+      done
+    fi
     :
   ) || exit 1
   echo "$dsc" > "$pyenvdir/state.txt"
@@ -100,13 +108,8 @@ pysetup \
 	--venv="$venv" \
 	--pkgs="
 		icecream
-		# docutils
-		sphinx
-		sphinx-autodoc2
-		myst-parser
-		linkify-it-py
-		sphinx-argparse
 	" \
+	--reqs=$mydir/docs/requirements.txt \
 	--reqs=$mydir/requirements.txt \
 	-- "$@"
 

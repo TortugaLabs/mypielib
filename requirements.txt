@@ -1,9 +1,1 @@
 # --only-binary=cryptography
-
-
-# docutils
-#sphinx
-#sphinx-autodoc2
-#myst-parser
-#linkify-it-py
-#sphinx-argparse
