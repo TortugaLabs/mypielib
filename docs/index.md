@@ -7,8 +7,6 @@ Version: {{version}}
 :maxdepth: 2
 :caption: Contents
 
-overview
-awesomepage
 cli
 apidocs/index
 ```
