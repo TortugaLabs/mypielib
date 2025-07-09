@@ -10,7 +10,10 @@ def cidr_to_netmask(cidr:int) -> str:
   From: https://stackoverflow.com/questions/33750233/convert-cidr-to-subnet-mask-in-python
 
   Examples:
-  
+
+  ```{doctest}
+
+  >>> from mypielib.cidr_to_netmask import cidr_to_netmask
   >>> cidr_to_netmask(32)
   '255.255.255.255'
   >>> cidr_to_netmask(30)
@@ -23,7 +26,9 @@ def cidr_to_netmask(cidr:int) -> str:
   '255.255.240.0'
   >>> cidr_to_netmask(16)
   '255.255.0.0'
-  
+
+  ```
+
   '''
   mask = (0xffffffff >> (32 - cidr)) << (32 - cidr)
   return (str( (0xff000000 & mask) >> 24)   + '.' +
@@ -33,5 +38,7 @@ def cidr_to_netmask(cidr:int) -> str:
 
 if __name__ == '__main__':
   import doctest
+  import sys
+  mypielib = sys.modules[__name__]
   doctest.testmod()
-  
+

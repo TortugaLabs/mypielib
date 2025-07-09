@@ -5,7 +5,7 @@ import os
 import sys
 import subprocess
 
-ERROR_STR = '0.0.0.dev0+unknown'
+ERROR_STR = 'unknown'
 
 def get_git_description():
   try:
@@ -30,13 +30,15 @@ def get_git_description():
     # The output is available in result.stdout
     return result.stdout.strip()  
   except subprocess.CalledProcessError as e:
-    sys.stderr.write(f"Warning: An error occurred while running git describe: {e.stderr.strip()}\nmodule vesion will be {ERROR_STR}.\n")
+    sys.stderr.write(f"Warning: An error occurred while running git describe: {e.stderr.strip()}\nmodule version will be {ERROR_STR}.\n")
     return ERROR_STR
   except Exception as e:
     sys.stderr.write(f"Unexpected error: {e}\n")
     return ERROR_STR
 
 VERSION = get_git_description()
+'''git based version'''
+
 try:
   from icecream import ic
 except ImportError:  # Graceful fallback if IceCream isn't installed.

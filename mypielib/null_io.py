@@ -2,7 +2,7 @@
 import os
 import sys
 
-saved_fds = []
+_saved_fds = []
 '''Used internally to save fds by null_io'''
 
 def null_io(close:bool = False, keep_stderr:bool = False):
@@ -20,35 +20,35 @@ def null_io(close:bool = False, keep_stderr:bool = False):
 
   '''
   if close:
-    if len(saved_fds) == 0:
+    if len(_saved_fds) == 0:
       null_fd = os.open(os.devnull,os.O_RDWR)
       os.dup2(null_fd, 0)
       os.dup2(null_fd, 1)
       if not keep_stderr: os.dup2(null_fd, 2)
       os.close(null_fd)
     else:
-      saved_fds[0].close()
-      saved_fds[1].close()
-      if not saved_fds[2] is None: saved_fds[2].close()
-      saved_fds[3].close()
+      _saved_fds[0].close()
+      _saved_fds[1].close()
+      if not _saved_fds[2] is None: _saved_fds[2].close()
+      _saved_fds[3].close()
     return
 
-  if len(saved_fds) == 0:
+  if len(_saved_fds) == 0:
     null_fd = os.open(os.devnull,os.O_RDWR)
-    saved_fds.append(os.dup(0))
-    saved_fds.append(os.dup(1))
-    saved_fds.append(None if keep_stderr else os.dup(2))
-    saved_fds.append(null_fd)
-    saved_fds.append(0)
+    _saved_fds.append(os.dup(0))
+    _saved_fds.append(os.dup(1))
+    _saved_fds.append(None if keep_stderr else os.dup(2))
+    _saved_fds.append(null_fd)
+    _saved_fds.append(0)
   else:
-    null_fd = saved_fds[3]
+    null_fd = _saved_fds[3]
 
-  if saved_fds[4]:
+  if _saved_fds[4]:
     # Already Nulled
-    saved_fds[4] += 1
+    _saved_fds[4] += 1
     return
 
-  saved_fds[4] += 1
+  _saved_fds[4] += 1
   os.dup2(null_fd, 0)
   os.dup2(null_fd, 1)
   if not keep_stderr: os.dup2(null_fd, 2)
@@ -56,10 +56,10 @@ def null_io(close:bool = False, keep_stderr:bool = False):
 def denull_io():
   '''Restores `null_io` redirections.
   '''
-  saved_fds[4] -= 1
-  if saved_fds[4]: return
+  _saved_fds[4] -= 1
+  if _saved_fds[4]: return
 
-  os.dup2(saved_fds[0], 0)
-  os.dup2(saved_fds[1], 1)
-  if not saved_fds[2] is None: os.dup2(saved_fds[2], 2)
+  os.dup2(_saved_fds[0], 0)
+  os.dup2(_saved_fds[1], 1)
+  if not _saved_fds[2] is None: os.dup2(_saved_fds[2], 2)
 

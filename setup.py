@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
-from mypielib.version import VERSION
+from mypielib.version import VERSION,ERROR_STR
 
 setup(
     name="mypielib",
-    version=VERSION,
+    version=None if VERSION == ERROR_STR else VERSION,
     packages=find_packages(),
     install_requires=[
         # Add any dependencies your library needs here

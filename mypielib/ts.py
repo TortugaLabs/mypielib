@@ -16,12 +16,19 @@ def timestamp(ts:float|None = None) -> str:
   :param float|None ts: Time stamp to create, omit if using current time
   :returns str: Formatted time stamp
 
+  Example:
+
+  ```{doctest}
+
+  >>> from mypielib.ts import timestamp
   >>> timestamp(0)
   '1970-01-01 01:00:00 +0100'
 
+  ```
+
   '''
 
-  
+
   if ts is None: ts = time.time()
   return time.strftime(TIMESTAMP_FORMAT, time.localtime(ts))
 
@@ -41,5 +48,7 @@ def ts_print(msg:str, io=None):
 
 if __name__ == '__main__':
   import doctest
+  import sys
+  mypielib = sys.modules[__name__]
   doctest.testmod()
-  
+

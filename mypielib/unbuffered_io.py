@@ -3,7 +3,8 @@ import sys
 
 
 class Unbuffered(object):
-  '''Wraps a stream object so that all its output gets flushed right away
+  '''Wraps a stream object so that all its output gets flushed right away.
+
      Unbuffered I/O
 
      A lot of times, daemons will run in the background with output
@@ -35,10 +36,9 @@ class Unbuffered(object):
 def unbuffered_io():
   '''Makes stdout and stderr unbuffered streams
 
-  sys.stdout and sys.stderr is modified.  Note that the underlying
+  sys.stdout and sys.stderr are modified.  Note that the underlying
   OS objects are unchanged.
   '''
   sys.stdout = Unbuffered(sys.stdout)
   sys.stderr = Unbuffered(sys.stderr)
 
-###$_end-include

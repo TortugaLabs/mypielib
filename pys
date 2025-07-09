@@ -2,39 +2,113 @@
 #
 # Run python using venv
 #
+
 set -euf
 (set -o pipefail >/dev/null 2>&1) && set -o pipefail || :
 
 mydir=$(dirname "$(readlink -f "$0")")
 venv="$mydir/.venv"
 
-setup() {
-  local reqs=requirements.txt
+###$_begin-include: pysetup.sh
 
-  if [ -d "$venv" ] ; then
-    (
-      [ x"$(cat "$venv/.realpath")" !=  x"$(readlink -f "$venv")" ] \
-      || ! diff -U 0 --color "$venv/.$reqs" "$mydir/$reqs"
-    ) && rm -rf "$venv" || return 0
+pysetup() {
+  local pyenvdir="" ospkgs="" pippkgs="" reqs="" reinstall=false
+  while [ $# -gt 0 ]
+  do
+  	case "$1" in
+  	  --venv=*) pyenvdir=${1#--venv=} ;;
+  	  --ospkgs=*) ospkgs="$ospkgs $(echo "${1#--ospkgs=}" | sed -e s'/#.*$//')" ;;
+  	  --pkgs=*) pippkgs="$pippkgs $(echo "${1#--pkgs=}" | sed -e s'/#.*$//')" ;;
+  	  --reqs=*) reqs="${1#--reqs=}" ;; 
+  	  --reinstall) reinstall=true ; break ;;
+  	  --) 
+    	shift
+    	[  $# -gt 0 ] && [ x"$1" == x"--reinstall" ] && reinstall=true
+    	break
+    	;;
+  	  *) break
+  	esac
+    shift
+  done
+  if [ -z "$pyenvdir" ] ; then
+    echo "No pyenvdir specified" 1>&2
+    exit 1
   fi
-  if [ ! -d "$venv" ] ; then
-    if ! (
-      python3 -m venv --system-site-packages "$venv"
-      readlink -f "$venv" > "$venv/.realpath"
-      cp "$mydir/$reqs" "$venv/.$reqs"
-      . "$venv/bin/activate"
-      pip install --requirement "$mydir/$reqs"
-      pip install icecream
-    ) ; then
-      rm -rf "$venv"
-      exit 1
+  if $reinstall ; then
+    if [ -d "$pyenvdir" ] ; then
+      if [ ! -f "$pyenvdir/bin/activate" ] ; then
+        echo "Configuration error in re-install" 1>&2
+        exit 2
+      fi
+      rm -rf "$pyenvdir"
     fi
   fi
-  return 0
+
+  local dsc=$(
+  	readlink -f "$pyenvdir"
+  	echo '>>> OS:' "$ospkgs"
+  	echo '>>> PIP:' "$pippkgs"
+  	if [ -n "$reqs" ] ; then
+  	  echo '>>> REQS:' "$reqs"
+  	  cat "$reqs" 2>/dev/null
+  	fi
+  	echo '>>> pysetup'
+  	declare -f pysetup || :
+  )
+  if [ -d "$pyenvdir" ] ; then
+    local cur=$(cat "$pyenvdir/state.txt" || :)
+    if [ x"$cur" = x"$dsc" ] ; then
+      . "$pyenvdir"/bin/activate
+      return 0
+    fi
+    if [ ! -f "$pyenvdir/bin/activate" ] ; then
+      echo "Configuration error" 1>&2
+      exit 2
+    fi
+    rm -rf "$pyenvdir"
+  fi
+
+  # Check for pre-requisites
+  local missing="" r
+  if type xbps-query >/dev/null 2>&1 ; then
+    for r in $ospkgs
+    do
+      xbps-query "$r" || missing="$missing $r"
+    done
+    if [ -n "$missing" ] ; then
+      echo "Missing packages:$missing" 1>&2
+      exit 34
+    fi
+  fi
+
+  python3 -m venv --system-site-packages "$pyenvdir"
+  (
+    . "$pyenvdir"/bin/activate
+    [ -n "$pippkgs" ] && pip install $pippkgs
+    [ -n "$reqs" ] && pip install --requirement "$reqs"
+    :
+  ) || exit 1
+  echo "$dsc" > "$pyenvdir/state.txt"
+  $reinstall && exit 0
+  . "$pyenvdir"/bin/activate
 }
 
-setup
-. "$venv"/bin/activate
+
+###$_end-include: pysetup.sh
+
+pysetup \
+	--venv="$venv" \
+	--pkgs="
+		icecream
+		# docutils
+		sphinx
+		sphinx-autodoc2
+		myst-parser
+		linkify-it-py
+		sphinx-argparse
+	" \
+	--reqs=$mydir/requirements.txt \
+	-- "$@"
 
 if [ $# -gt 0 ] && type "$1" >/dev/null 2>&1 ; then
   "$@"

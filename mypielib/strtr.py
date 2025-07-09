@@ -1,4 +1,4 @@
-#python3
+
 
 def strtr(strng:str, replace:dict[str]) -> str:
   '''Replaces substrings defined in the `replace` dictionary with
@@ -8,15 +8,24 @@ def strtr(strng:str, replace:dict[str]) -> str:
   :param dict replace: Mapping of string substitutions
   :returns str: string with the replaced contents
 
-  Based on [phps-strtr-for-python](https://stackoverflow.com/questions/10931150/phps-strtr-for-python).
+  Based on
+  [phps-strtr-for-python](https://stackoverflow.com/questions/10931150/phps-strtr-for-python).
 
   Equivalent to php [strtr](https://www.php.net/manual/en/function.strtr.php)
   function.
 
-  >>> strtr('one two three',{'one': '1', 'two': '2', 'three': '3'})
+  Example:
+  ```{doctest}
+
+  >>> from mypielib.strtr import strtr
+  >>> mypielib.strtr('one two three',{'one': '1', 'two': '2', 'three': '3'})
   '1 2 3'
-  
+
+  ```
+
   '''
+
+
   buf, i = [], 0
   while i < len(strng):
     for s, r in replace.items():
@@ -31,5 +40,7 @@ def strtr(strng:str, replace:dict[str]) -> str:
 
 if __name__ == '__main__':
   import doctest
+  import sys
+  mypielib = sys.modules[__name__]
   doctest.testmod()
-  
+

@@ -6,12 +6,21 @@ def src():
 
   :returns (str,int): file and line of caller
 
+  Example:
+  ```{doctest}
+
+  >>> from mypielib.src import src
   >>> src()
-  ('<doctest __main__.src[0]>', 1)
+  ('<doctest default[1]>', 1)
+
+  ```
   '''
   caller = getframeinfo(stack()[1][0])
   return (caller.filename,caller.lineno)
 
 if __name__ == '__main__':
-  import doctest
-  doctest.testmod()
+  ...
+  # ~ import doctest
+  # ~ import sys
+  # ~ mypielib = sys.modules[__name__]
+  # ~ doctest.testmod()

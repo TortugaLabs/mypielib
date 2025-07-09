@@ -10,13 +10,16 @@ def file_args(inargs:list[str]) -> list[str]:
   :returns list: replacement args
 
   Arguments that begin with '@' are replaced with the contents
-  of an argument file or a single '@" followed by a filename.
+  of an argument file or a single '@' followed by a filename.
   Unless the file does not exists and then the argument is just
   added as is.
 
   Argument file syntax follows `shlex` semantics with comments
   enabled.
-  
+
+  Note that if using Python's `argparse`, you can simply use the
+  `fromfile_prefix_chars` option.
+
   """
   outargs = []
   i = 0
@@ -40,5 +43,3 @@ def file_args(inargs:list[str]) -> list[str]:
 if __name__ == '__main__':
   sys.argv = file_args(sys.argv)
   print(sys.argv)
-  # import doctest
-  # doctest.testmod()

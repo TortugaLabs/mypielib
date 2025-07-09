@@ -19,6 +19,8 @@ def myself():
 
 if __name__ == '__main__':
   # import doctest
+  # import sys
+  # mypielib = sys.modules[__name__]
   # doctest.testmod()
   ...
-  
+
