@@ -5,8 +5,6 @@ import os
 import sys
 import subprocess
 
-ERROR_STR = 'unknown'
-
 def get_git_description():
   try:
     # Get the directory where this script is located
@@ -16,7 +14,7 @@ def get_git_description():
       if not env is None: return env
 
     script_directory = os.path.dirname(os.path.abspath(__file__))
-      
+
     # Run the command with subprocess.run in the script's directory
     result = subprocess.run(
         ['git', 'describe'],
@@ -26,15 +24,15 @@ def get_git_description():
         text=True,                # Decode bytes to string
         check=True                # Raise a CalledProcessError for non-zero exit codes
     )
-      
+
     # The output is available in result.stdout
-    return result.stdout.strip()  
+    return result.stdout.strip()
   except subprocess.CalledProcessError as e:
-    sys.stderr.write(f"Warning: An error occurred while running git describe: {e.stderr.strip()}\nmodule version will be {ERROR_STR}.\n")
-    return ERROR_STR
+    sys.stderr.write(f"Warning: An error occurred while running git describe: {e.stderr.strip()}\nUnknown module version.\n")
+    return None
   except Exception as e:
     sys.stderr.write(f"Unexpected error: {e}\n")
-    return ERROR_STR
+    return None
 
 VERSION = get_git_description()
 '''git based version'''

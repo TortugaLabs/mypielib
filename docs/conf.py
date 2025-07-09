@@ -25,7 +25,7 @@ author = 'Alejandro Liu'
 # built documents.
 #
 # The short X.Y version.
-version = VERSION
+version = '$unknown$' if VERSION is None else VERSION
 # The full version, including alpha/beta/rc tags.
 # release = '0.0.0'
 
