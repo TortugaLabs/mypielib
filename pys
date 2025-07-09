@@ -19,11 +19,11 @@ pysetup() {
   	  --venv=*) pyenvdir=${1#--venv=} ;;
   	  --ospkgs=*) ospkgs="$ospkgs $(echo "${1#--ospkgs=}" | sed -e s'/#.*$//')" ;;
   	  --pkgs=*) pippkgs="$pippkgs $(echo "${1#--pkgs=}" | sed -e s'/#.*$//')" ;;
-  	  --reqs=*) reqs="${1#--reqs=}" ;; 
+  	  --reqs=*) reqs="${1#--reqs=}" ;;
   	  --reinstall) reinstall=true ; break ;;
-  	  --) 
+  	  --)
     	shift
-    	[  $# -gt 0 ] && [ x"$1" == x"--reinstall" ] && reinstall=true
+    	[  $# -gt 0 ] && [ x"$1" = x"--reinstall" ] && reinstall=true
     	break
     	;;
   	  *) break
