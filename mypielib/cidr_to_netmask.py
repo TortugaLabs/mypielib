@@ -7,7 +7,7 @@ def cidr_to_netmask(cidr:int) -> str:
   :param int cidr: prefix to convert
   :returns str: netmask
 
-  From: https://stackoverflow.com/questions/33750233/convert-cidr-to-subnet-mask-in-python
+  From: https://stackoverflow.com/questions/33750233/
 
   Examples:
 
