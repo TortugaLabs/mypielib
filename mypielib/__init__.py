@@ -7,6 +7,7 @@ from .version import VERSION
 from .cidr_to_netmask import cidr_to_netmask
 from .daemonize import daemonize
 from .file_args import file_args
+from .gitver import gitver
 from .myself import myself
 from .null_io import null_io,denull_io
 from .pidfile import pidfile

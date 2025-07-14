@@ -1,4 +1,6 @@
 from setuptools import setup, find_packages
+import os
+os.environ['IN_SETUPTOOLS'] = 'yes'
 from mypielib.version import VERSION
 
 setup(
