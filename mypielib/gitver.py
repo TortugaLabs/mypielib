@@ -12,30 +12,10 @@ import re
 import sys
 import subprocess
 
-try:
-  from packaging.version import Version, InvalidVersion
-except ImportError:
-  ...
-
-def is_valid_version(version_string:str) -> bool:
-  '''Test if the version is valid
-
-  :param version_string: string to test
-  :returns: True if valid, False if invalid
-  '''
-  try:
-    # Attempt to create a Version object; this will validate the version string
-    Version(version_string)
-    return True
-  except InvalidVersion:
-    # If an InvalidVersion exception is raised, the version string is invalid
-    return False
-
 def gitver(script_dir:str|None = None, setup_ver:bool = False, default = None ) -> str|None:
   '''use `git describe` to get version info
 
   :param script_dir: working directory for git repo
-  :param setup_ver: sanitize version so it can be used in `setuptools`.
   :param default: returns this value in case of error
   :returns: string with version info or None on error
   '''
@@ -63,12 +43,7 @@ def gitver(script_dir:str|None = None, setup_ver:bool = False, default = None ) 
     )
 
     # The output is available in result.stdout
-    vs = result.stdout.strip()
-    if setup_ver:
-      if mv := re.match(r'^(.+)-(\d+)-(g[0-9a-f]+)',vs):
-        vs = f'{mv.group(1)}a{mv.group(2)}+{mv.group(3)}'
-      if not is_valid_version(vs): vs = default
-    return vs
+    return result.stdout.strip()
   except subprocess.CalledProcessError as e:
     sys.stderr.write(f"Warning: An error occurred while running git describe: {e.stderr.strip()}\nUnknown module version.\n")
     return default
