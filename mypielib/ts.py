@@ -24,6 +24,8 @@ def timestamp(ts:float|None = None) -> str:
   >>> from mypielib.ts import timestamp
   >>> timestamp(0)
   '1970-01-01 00:00:00 +0000'
+  >>> timestamp(1752660896)
+  '2025-07-16 10:14:55 +0000'
 
   ```
 
