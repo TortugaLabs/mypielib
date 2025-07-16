@@ -5,10 +5,14 @@ import os
 import re
 import sys
 import subprocess
+try:
+  from icecream import ic
+except ImportError:  # Graceful fallback if IceCream isn't installed.
+  ic = lambda *a: None if not a else (a[0] if len(a) == 1 else a)  # noqa
 
 try:
   from packaging.version import Version, InvalidVersion
-  VCHECK = True
+  VCHECK = not 'NO_VCHECK' in os.environ
 except ImportError:
   VCHECK = False
 
@@ -22,10 +26,9 @@ def _get_git_description(default:str|None = None) -> str|None:
   '''
   try:
     # Get the directory where this script is located
-    env_type = os.getenv('GITHUB_REF_TYPE','unknown')
-    if env_type == 'tag':
+    if 'tag' == os.getenv('GITHUB_REF_TYPE','unknown'):
       env = os.getenv('GITHUB_REF_NAME',None)
-      if not env is None: return env
+      if env: return env
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -64,8 +67,4 @@ VERSION = _get_git_description()
 
 
 if __name__ == '__main__':
-  try:
-    from icecream import ic
-  except ImportError:  # Graceful fallback if IceCream isn't installed.
-    ic = lambda *a: None if not a else (a[0] if len(a) == 1 else a)  # noqa
-  ic(VERSION)
+  print(VERSION)
