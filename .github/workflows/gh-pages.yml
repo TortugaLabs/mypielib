@@ -40,11 +40,11 @@ jobs:
     - name: Additional deploy check...
       id: check
       run: |
-        env | grep GITHUB
+        env | grep GITHUB | sort
         set -x
         if [ x"$GITHUB_REF" = x"refs/heads/main" ] ; then
           echo "do_deploy=true" >> "$GITHUB_OUTPUT"
-        elif [ x"$GITHUB_REF_TYPE = "tag" ] ; then
+        elif [ x"$GITHUB_REF_TYPE" = "tag" ] ; then
           TAG_COMMIT=$(git rev-parse $GITHUB_REF)
           MAIN_COMMIT=$(git rev-parse origin/main)
           :
