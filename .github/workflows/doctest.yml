@@ -1,0 +1,26 @@
+# Shared workflow
+name: doctest
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  doctest:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+        cache: pip
+    - name: Install sphinx dependencies
+      run: pip install -r docs/requirements.txt -r requirements.txt
+    - name: Run doctest
+      run: make -C docs doctest
