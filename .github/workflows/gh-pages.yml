@@ -69,7 +69,7 @@ jobs:
     - name: Install sphinx dependencies
       run: pip install -r docs/requirements.txt
     - name: Generate sphinx documentation
-      run: make -C docs html
+      run: env NO_VCHECK=1 make -C docs html
 
     - name: Setup Pages
       uses: actions/configure-pages@v5
