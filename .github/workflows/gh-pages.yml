@@ -60,7 +60,7 @@ jobs:
           echo "do_deploy=false" >> "$GITHUB_OUTPUT"
         fi
         set +x
-        echo DESCRIBE: $(git describe) || "
+        echo DESCRIBE: $(git describe) || :
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
