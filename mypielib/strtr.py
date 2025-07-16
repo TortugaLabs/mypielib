@@ -18,14 +18,12 @@ def strtr(strng:str, replace:dict[str]) -> str:
   ```{doctest}
 
   >>> from mypielib.strtr import strtr
-  >>> mypielib.strtr('one two three',{'one': '1', 'two': '2', 'three': '3'})
+  >>> strtr('one two three',{'one': '1', 'two': '2', 'three': '3'})
   '1 2 3'
 
   ```
 
   '''
-
-
   buf, i = [], 0
   while i < len(strng):
     for s, r in replace.items():
@@ -40,7 +38,8 @@ def strtr(strng:str, replace:dict[str]) -> str:
 
 if __name__ == '__main__':
   import doctest
-  import sys
-  mypielib = sys.modules[__name__]
-  doctest.testmod()
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')
 

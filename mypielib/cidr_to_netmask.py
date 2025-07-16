@@ -38,7 +38,7 @@ def cidr_to_netmask(cidr:int) -> str:
 
 if __name__ == '__main__':
   import doctest
-  import sys
-  mypielib = sys.modules[__name__]
-  doctest.testmod()
-
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')

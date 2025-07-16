@@ -1,7 +1,6 @@
-# Welcome to a {{project}}'s documentation
+# Welcome to {{project}}'s documentation
 
 Version: {{version}}
-
 
 ```{toctree}
 :maxdepth: 2
@@ -9,6 +8,7 @@ Version: {{version}}
 
 cli
 apidocs/index
+CHANGES
 ```
 
 # Indices and tables
