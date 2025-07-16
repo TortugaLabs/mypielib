@@ -28,6 +28,8 @@ author = 'Alejandro Liu'
 version = '$unknown$' if VERSION is None else VERSION
 # The full version, including alpha/beta/rc tags.
 # release = '0.0.0'
+print('VERSION:',version)
+
 
 # -- General configuration ---------------------------------------
 
