@@ -19,10 +19,11 @@ def timestamp(ts:float|None = None) -> str:
   Example:
 
   ```{doctest}
-
+  >>> import os
+  >>> os.environ['TZ'] = 'UTC'
   >>> from mypielib.ts import timestamp
   >>> timestamp(0)
-  '1970-01-01 01:00:00 +0100'
+  '1970-01-01 00:00:00 +0000'
 
   ```
 
@@ -48,7 +49,7 @@ def ts_print(msg:str, io=None):
 
 if __name__ == '__main__':
   import doctest
-  import sys
-  mypielib = sys.modules[__name__]
-  doctest.testmod()
-
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')
