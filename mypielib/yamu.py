@@ -2,14 +2,13 @@
 '''
 Module with very simple YAML utilities
 '''
-import yaml # type:ignore
-
 try:
   from icecream import ic # type:ignore
   ic.configureOutput(includeContext=True)
 except ImportError: # Gracefull fallback if IceCream isn't installed
   ic = lambda *a: None if not a else (a[0] if len(1) == 1 else a) # noqa
 
+import yaml # type:ignore
 
 def load_yaml(afile:str, **kwargs) -> any:
   '''Load YAML from a given file name

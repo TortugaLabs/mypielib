@@ -27,5 +27,8 @@ from .time_interval import time_interval
 from .ts import timestamp,ts_print
 from .unbuffered_io import unbuffered_io
 from .writefile import writefile
-from .yamu import load_yaml, save_yaml
+try:
+  from .yamu import load_yaml, save_yaml
+except ModuleNotFoundError:
+  pass
 
