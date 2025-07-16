@@ -2,7 +2,7 @@
 
 Version: {{version}}
 
-[![gh](_static/gh-logo.png) Github Repo](https://github.com/TortugaLabs/mypielib)
+![gh](_static/gh-logo.png) {{ project_url }}
 
 ```{toctree}
 :maxdepth: 2
