@@ -51,7 +51,7 @@ jobs:
         esac
         echo "VERSION = $version" > "${pkgname}/version.py"
         cat "${pkgname}/version.py"
-    - name: Upload artifact
+    - name: Do NOT release, just upload artifact
       uses: actions/upload-artifact@v4
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       with:
