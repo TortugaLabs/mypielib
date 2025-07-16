@@ -2,6 +2,8 @@
 
 Version: {{version}}
 
+![gh](_static/gh-logo.png) {{ project_url }}
+
 ```{toctree}
 :maxdepth: 2
 :caption: Contents

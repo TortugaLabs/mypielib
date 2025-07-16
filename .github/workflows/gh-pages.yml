@@ -5,10 +5,8 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-    tags: [ "*" ]
-    # Settings -> Environments
-    # Selet github-pages
-    # add rule for tags v1.*
+    # Adding "tags" here does not work as the gh-pages do not seem
+    # to update.
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,38 +27,12 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      do_deploy: ${{ steps.check.outputs.do_deploy }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
         # Make sure we have tag information for git describe
         fetch-depth: 0
-    - name: Additional deploy check...
-      id: check
-      run: |
-        env | grep GITHUB | sort
-        set -x
-        if [ x"$GITHUB_REF" = x"refs/heads/main" ] ; then
-          echo "do_deploy=true" >> "$GITHUB_OUTPUT"
-        elif [ x"$GITHUB_REF_TYPE" = x"tag" ] ; then
-          TAG_COMMIT=$(git rev-parse $GITHUB_REF)
-          MAIN_COMMIT=$(git rev-parse origin/main)
-          :
-          echo "Tag commit: $TAG_COMMIT"
-          echo "Main commit: $MAIN_COMMIT"
-          :
-          if [ "$TAG_COMMIT" = "$MAIN_COMMIT" ]; then
-            echo "do_deploy=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "do_deploy=false" >> "$GITHUB_OUTPUT"
-          fi
-        else
-          echo "do_deploy=false" >> "$GITHUB_OUTPUT"
-        fi
-        set +x
-        echo DESCRIBE: $(git describe) || :
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -79,15 +51,14 @@ jobs:
         path: docs/_build/html
 
   deploy:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
-    if: needs.build.outputs.do_deploy == 'true'
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
-
 

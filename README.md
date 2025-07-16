@@ -6,8 +6,6 @@
 
 My personal python library
 
-## TODO
-
 
 
 

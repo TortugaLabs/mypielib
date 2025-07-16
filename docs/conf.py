@@ -19,6 +19,8 @@ from mypielib.version import VERSION
 project = 'mypielib'
 copyright = '2025, Alejandro Liu'
 author = 'Alejandro Liu'
+project_url = 'https://github.com/TortugaLabs/mypielib'
+
 
 # The version info for the project you're documenting, acts as
 # replacement for |version| and |release|, also used in various
@@ -76,6 +78,7 @@ myst_substitutions = {
   'project': project,
   'copyright': copyright,
   'author': author,
+  'project_url': project_url,
 }
 
 # doctest_global_setup = '''
