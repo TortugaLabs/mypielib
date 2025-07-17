@@ -10,6 +10,7 @@ Version: {{version}}
 
 cli
 apidocs/index
+devnotes
 CHANGES
 ```
 

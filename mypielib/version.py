@@ -63,4 +63,5 @@ except InvalidVersion:
 
 
 if __name__ == '__main__':
-  print(VERSION)
+  print('VERSION',VERSION)
+  print('SETUP_VERSION', SETUP_VERSION)

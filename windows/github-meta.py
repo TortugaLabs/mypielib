@@ -107,7 +107,7 @@ def main():
       output_lines['PRERELEASE'] = 'true'
       pkgid = 'pre'
 
-    body = gitrun(['git','show','-s','--format=%B',ref_name,'--'])    
+    body = gitrun(['git','show','-s','--format=%B', pkgver,'--'])    
     output_lines['RELTEXT'] = '' if body is None else body
   else:
     pkgver = gitrun(['git','describe'])
