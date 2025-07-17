@@ -19,43 +19,19 @@ jobs:
     needs: doctest
     steps:
     - uses: actions/checkout@v4
-    - name: Config version
-      id: qids
-      run: |
-        set -x
-        pkgname=$(basename "$GITHUB_REPOSITORY")
-        if [ ! -d "$pkgname" ] ; then
-          echo "${pkgname} directory does *NOT* exist!"
-          echo "Don't know what to do here" 1>&2
-          exit 1
-        fi
-        echo "pkgname=${pkgname}" >> "$GITHUB_OUTPUT"
-        echo ref: ${GITHUB_REF_TYPE:-none} : "${GITHUB_REF_NAME:-none}"
-        case "${GITHUB_REF_TYPE:-none}" in
-        tag)
-          echo "relid=${GITHUB_REF_NAME:-"notag"}" >> "$GITHUB_OUTPUT"
-          version="'${GITHUB_REF_NAME:-"0.0.0.dev0+unknown"}'"
-          case "$version" in
-            *.dev*|*.prerel*|*.rc*)
-              echo "prerelease=true" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "prerelease=false" >> "$GITHUB_OUTPUT"
-              ;;
-          esac
-          ;;
-        *)
-          echo "relid=prerel" >> "$GITHUB_OUTPUT"
-          version=None
-          ;;
-        esac
-        echo "VERSION = $version" > "${pkgname}/version.py"
-        cat "${pkgname}/version.py"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+        cache: pip
+    - name: meta data
+      id: meta
+      run: python windows/github-meta.py WRITE_VERSION=1
     - name: Do NOT release, just upload artifact
       uses: actions/upload-artifact@v4
       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       with:
-        name: "${{ steps.qids.outputs.pkgname }}-${{ steps.qids.outputs.relid }}"
+        name: "${{ steps.meta.outputs.PYPKG }}-${{ steps.meta.outputs.PKGID }}"
         path: |
           ./*
           !.git/
@@ -63,19 +39,21 @@ jobs:
           !.env
         compression-level: 9 # maximum compression
 
-    - name: Create zip
+    - name: Create zip for release
       if: startsWith(github.ref, 'refs/tags/')
       run: |
         set -x
-        zipname="${{ steps.qids.outputs.pkgname }}-${{ steps.qids.outputs.relid }}.zip"
+        zipname="${{ steps.meta.outputs.PYPKG }}-${{ steps.meta.outputs.PKGID }}.zip"
         find . '(' -path ./.git -o -path ./.github ')' -prune -o ! -name "$zipname" ! -name ".git*" -type f | cut -d/ -f2- | zip -9 -D -@ "$zipname"
-    - name: Upload binaries to release
+    - name: Upload zip to release
       if: startsWith(github.ref, 'refs/tags/')
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: "${{ steps.qids.outputs.pkgname }}-${{ steps.qids.outputs.relid }}.zip"
+        file: "${{ steps.meta.outputs.PYPKG }}-${{ steps.meta.outputs.PKGID }}.zip"
         tag: ${{ github.ref }}
         overwrite: true
-        prerelease: "${{ steps.qids.outputs.prerelease }}"
+        prerelease: "${{ steps.meta.outputs.PRERELEASE }}"
+        body: |
+          ${{ steps.meta.outputs.RELTEXT }}
 
