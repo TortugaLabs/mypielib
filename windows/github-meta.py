@@ -51,7 +51,9 @@ def main():
     if re.search(r'-rc[0-9]+$', ref_name) or re.search(r'-dev[0-9]*$', ref_name) or re.search(r'-pre[0-9]*$', ref_name):
       output_lines[K.prerelease_tag] = 'true'
     relbody = gitrun(['git','show','-s','--format=%B',ref_name,'--'])
-    if relbody is not None: output_lines[K.release_body] = relbody
+    if relbody is not None: output_lines[K.release_body] = relbody  
+  else:
+    output_lines[K.prerelease_tag] = 'true'
 
   if len(output_lines) > 0:
     with open(github_output,'a') as fp:

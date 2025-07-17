@@ -40,7 +40,7 @@ jobs:
     - name: Create exe
       run: |
         dir
-        pyinstaller --clean -y --dist ./dist --onefile --name xlpricer --name xlpricer --hide-console hide-early ./xlpricer/__main__.py
+        pyinstaller --clean -y --dist ./dist --onefile --name mypielib --hide-console hide-early ./mypielib/__main__.py
         dir dist
     - uses: actions/upload-artifact@v4
       if: startsWith(github.ref, 'refs/heads/')

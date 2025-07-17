@@ -14,33 +14,35 @@ import subprocess
 ERROR_STR = 'vExp'
 
 def get_git_description(file:str) -> str:
-  try:
-    # Get the directory where this script is located
-    env_type = os.getenv('GITHUB_REF_TYPE','unknown')
-    if env_type == 'tag':
-      env = os.getenv('GITHUB_REF_NAME',None)
-      if not env is None: return env
+  # Get the directory where this script is located
+  if os.getenv('GITHUB_REF_TYPE','unknown') == 'tag':
+    env = os.getenv('GITHUB_REF_NAME',None)
+    if not env is None: return env
 
-    script_directory = os.path.dirname(os.path.abspath(file))
+  script_directory = os.path.dirname(os.path.abspath(file))
       
-    # Run the command with subprocess.run in the script's directory
-    result = subprocess.run(
+  # Run the command with subprocess.run in the script's directory
+  result = subprocess.run(
         ['git', 'describe'],
         cwd=script_directory,     # Set the current working directory
         stdout=subprocess.PIPE,   # Capture standard output
         stderr=subprocess.PIPE,   # Capture standard error (optional)
         text=True,                # Decode bytes to string
-        check=True                # Raise a CalledProcessError for non-zero exit codes
     )
-      
-    # The output is available in result.stdout
-    return result.stdout.strip()  
-  except subprocess.CalledProcessError as e:
-    sys.stderr.write(f"An error occurred while running git describe: {e.stderr.strip()}\n")
-    return ERROR_STR
-  except Exception as e:
-    sys.stderr.write(f"Unexpected error: {e}\n")
-    return ERROR_STR
+  if result.stderr: sys.stderr.write(result.stderr)
+  if result.return_code == 0: return result.stdout.strip()
+
+  result = subprocess.run(
+        ['git', 'describe', '--always'],
+        cwd=script_directory,     # Set the current working directory
+        stdout=subprocess.PIPE,   # Capture standard output
+        stderr=subprocess.PIPE,   # Capture standard error (optional)
+        text=True,                # Decode bytes to string
+    )
+  if result.stderr: sys.stderr.write(result.stderr)
+  if result.return_code == 0: return '$git:'+result.stdout.strip()
+  return "$unknown$"
+
 
 def make_parser():
   ''' Command Line Interface argument parser '''
@@ -53,15 +55,13 @@ if __name__ == '__main__':
   cli = make_parser()
   args = cli.parse_args()
   if isinstance(args.version_py,list): args.version_py = args.version_py[0]
-  ic(args)
   print(args)
 
   text = '''
 VERSION = "{version}"
 '''.format(version = get_git_description(args.version_py))
 
+  print(text)
   if args.write:
     with open(args.version_py,'w') as fp:
       fp.write(text)
-  else:    
-    print(text)
