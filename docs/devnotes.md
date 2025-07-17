@@ -16,6 +16,12 @@ Sample versions:
 - `1.0.post1` - post release (or patch release)
 - `1.0.dev1` - development release
 
+For some reason workflows triggered by tag pushes do not seem to update
+the github pages documentation with new version numbers.  For that to
+update properly a new commit needs to be pushed to the `main` branch.
+Probably updating the `Change log` document and pushing to the `main`
+branch would be enough.
+
   [gh]: https://github.com
   [vg]: https://setuptools.pypa.io/en/latest/userguide/distribution.html
   [st]: https://github.com/pypa/setuptools
