@@ -40,7 +40,7 @@ def get_git_description(file:str) -> str:
         text=True,                # Decode bytes to string
     )
   if result.stderr: sys.stderr.write(result.stderr)
-  if result.returncode == 0: return '$git:'+result.stdout.strip()
+  if result.returncode == 0: return f'$git:{result.stdout.strip()}$'
   return "$unknown$"
 
 

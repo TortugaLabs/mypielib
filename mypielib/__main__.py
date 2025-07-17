@@ -11,7 +11,7 @@ import os
 import subprocess
 import sys
 
-import mypielib
+from mypielib.version import VERSION
 
 def make_parser():
   ''' Command Line Interface argument parser '''
@@ -19,7 +19,7 @@ def make_parser():
   if os.path.basename(name) == '__main__.py': name = os.path.basename(os.path.dirname(name))
 
   cli = argparse.ArgumentParser(prog=name, description='Command line utilities')
-  cli.add_argument('-V','--version', action='version', version=f'%(prog)s {mypielib.VERSION}')
+  cli.add_argument('-V','--version', action='version', version=f'%(prog)s {VERSION}')
 
   subs = cli.add_subparsers(dest='command', help='Available subcommands')
 
