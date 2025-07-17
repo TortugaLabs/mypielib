@@ -30,7 +30,7 @@ def get_git_description(file:str) -> str:
         text=True,                # Decode bytes to string
     )
   if result.stderr: sys.stderr.write(result.stderr)
-  if result.return_code == 0: return result.stdout.strip()
+  if result.returncode == 0: return result.stdout.strip()
 
   result = subprocess.run(
         ['git', 'describe', '--always'],
@@ -40,7 +40,7 @@ def get_git_description(file:str) -> str:
         text=True,                # Decode bytes to string
     )
   if result.stderr: sys.stderr.write(result.stderr)
-  if result.return_code == 0: return '$git:'+result.stdout.strip()
+  if result.returncode == 0: return '$git:'+result.stdout.strip()
   return "$unknown$"
 
 
