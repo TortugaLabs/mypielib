@@ -9,10 +9,7 @@
 import os
 import sys
 
-pkg_root = os.path.join(os.path.dirname(__file__), '../')
-sys.path.insert(0, pkg_root)
-print(sys.path[0])
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('..'))
 from mypielib.version import VERSION
 
 # General information about the project.
@@ -20,6 +17,7 @@ project = 'mypielib'
 copyright = '2025, Alejandro Liu'
 author = 'Alejandro Liu'
 project_url = 'https://github.com/TortugaLabs/mypielib'
+version = VERSION
 
 
 # The version info for the project you're documenting, acts as
@@ -27,7 +25,6 @@ project_url = 'https://github.com/TortugaLabs/mypielib'
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '$unknown$' if VERSION is None else VERSION
 # The full version, including alpha/beta/rc tags.
 # release = '0.0.0'
 print('VERSION:',version)
