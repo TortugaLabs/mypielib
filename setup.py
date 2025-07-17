@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 import os
 os.environ['IN_SETUPTOOLS'] = 'yes'
-from mypielib.version import VERSION
+from mypielib.version import SETUP_VERSION
 
 setup(
     name="mypielib",
-    version=VERSION,
+    version=SETUP_VERSION,
     packages=find_packages(),
     install_requires=[
         # Add any dependencies your library needs here
