@@ -24,6 +24,8 @@ jobs:
       with:
         python-version: "3.13"
         cache: pip
+    - name: Install packaging
+      run: pip install packaging
     - name: meta data
       id: meta
       run: python windows/github-meta.py WRITE_VERSION=1

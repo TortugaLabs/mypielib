@@ -26,7 +26,7 @@ def _get_git_description() -> str:
   # Get the directory where this script is located
   if 'tag' == os.getenv('GITHUB_REF_TYPE','unknown'):
     env = os.getenv('GITHUB_REF_NAME',None)
-    if env: return env,env
+    if env: return env
 
   script_dir = os.path.dirname(os.path.abspath(__file__))
 
