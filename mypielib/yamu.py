@@ -18,6 +18,22 @@ def load_yaml(afile:str, **kwargs) -> any:
   :returns: value loaded from yaml
 
   I don't know why PyYaml doesn't do this already...
+
+
+  ```{doctest}
+
+  >>> from tempfile import NamedTemporaryFile
+  >>> from mypielib.writefile import writefile
+  >>> temp = NamedTemporaryFile('w')
+  >>> writefile(temp.name,'one: 1'+chr(10)+'two: "dos"'+chr(10)+'list: [1,2,3]'+chr(10))
+
+  >>> from mypielib.yamu import load_yaml
+  >>> load_yaml(temp.name)
+  {'one': 1, 'two': 'dos', 'list': [1, 2, 3]}
+
+  
+  ```
+
   '''
   with open(afile,'r') as fp:
     dat = yaml.safe_load(fp, **kwargs)
@@ -31,9 +47,28 @@ def save_yaml(afile:str, data:any, **kwargs):
   :param kwargs: Optional options to pass to yaml.safe_load
 
   I don't know why PyYaml doesn't do this already...
+
+  ```{doctest}
+  
+  >>> from tempfile import NamedTemporaryFile
+  >>> from mypielib.readfile import readfile
+  >>> temp = NamedTemporaryFile('w')
+
+  >>> from mypielib.yamu import save_yaml
+  >>> save_yaml(temp.name, {'one': 1, 'two': 'dos', 'list': [1, 2, 3]})
+  >>> readfile(temp.name).replace(chr(10),'%0A')
+  'list:%0A- 1%0A- 2%0A- 3%0Aone: 1%0Atwo: dos%0A'
+  
+
+  ```
+
   '''
   with open(afile,'w') as fp:
     yaml.safe_dump(data, fp, **kwargs)
 
 if __name__ == '__main__':
-  ...
+  import doctest
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')

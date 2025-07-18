@@ -20,6 +20,16 @@ def file_args(inargs:list[str]) -> list[str]:
   Note that if using Python's `argparse`, you can simply use the
   `fromfile_prefix_chars` option.
 
+  >>> from tempfile import NamedTemporaryFile
+  >>> from mypielib.writefile import writefile
+  >>> temp = NamedTemporaryFile('w')
+  >>> writefile(temp.name,'this "is a" file'+chr(10)+'one')
+
+  >>> from mypielib.file_args import file_args
+  >>> file_args(['@'+temp.name,'blah','bloh'])
+  ['this', 'is a', 'file', 'one', 'blah', 'bloh']
+
+
   """
   outargs = []
   i = 0
@@ -41,5 +51,8 @@ def file_args(inargs:list[str]) -> list[str]:
 
 
 if __name__ == '__main__':
-  sys.argv = file_args(sys.argv)
-  print(sys.argv)
+  import doctest
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')

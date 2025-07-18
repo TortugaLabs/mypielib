@@ -10,8 +10,11 @@ def src():
   ```{doctest}
 
   >>> from mypielib.src import src
-  >>> src()
-  ('<doctest default[1]>', 1)
+  >>> filename, lineno = src()
+  >>> type(filename)
+  <class 'str'>
+  >>> lineno
+  1
 
   ```
   '''
@@ -19,8 +22,8 @@ def src():
   return (caller.filename,caller.lineno)
 
 if __name__ == '__main__':
-  ...
-  # ~ import doctest
-  # ~ import sys
-  # ~ mypielib = sys.modules[__name__]
-  # ~ doctest.testmod()
+  import doctest
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')

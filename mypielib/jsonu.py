@@ -18,9 +18,24 @@ def load_json(afile:str, **kwargs) -> any:
   :param kwargs: Additional optional keywords to be pass to json.dump
   :returns: value loaded from json
 
+  Examples:
+
+  ```{doctest}
+
+  >>> from tempfile import NamedTemporaryFile
+  >>> from mypielib.writefile import writefile
+  >>> temp = NamedTemporaryFile('w')
+  >>> writefile(temp.name,'{"one": 1, "two": "dos", "list": [1,2,3]}')
+
+  >>> from mypielib.jsonu import load_json
+  >>> load_json(temp.name)
+  {'one': 1, 'two': 'dos', 'list': [1, 2, 3]}
+
+  ```
+
   '''
   with open(afile,'r') as fp:
-    dat = json.safe_load(fp, **kwargs)
+    dat = json.load(fp, **kwargs)
   return dat
 
 def save_json(afile:str, data:any, **kwargs):
@@ -30,9 +45,27 @@ def save_json(afile:str, data:any, **kwargs):
   :param data: data to save
   :param kwargs: Additional optional keywords to be pass to json.dump
 
+  ```{doctest}
+  
+  >>> from tempfile import NamedTemporaryFile
+  >>> from mypielib.readfile import readfile
+  >>> temp = NamedTemporaryFile('w')
+
+  >>> from mypielib.jsonu import save_json
+  >>> save_json(temp.name, {'one': 1, 'two': 'dos', 'list': [1, 2, 3]})
+  >>> readfile(temp.name)
+  '{"one": 1, "two": "dos", "list": [1, 2, 3]}'
+
+  ```
+
   '''
   with open(afile,'w') as fp:
     json.dump(data, fp, **kwargs)
 
-if __name__ == '__main__':
   ...
+if __name__ == '__main__':
+  import doctest
+  import os,sys
+  sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+  failures, tests = doctest.testmod()
+  print(f'Failures: {failures} of {tests} tests')
