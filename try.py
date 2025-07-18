@@ -1,5 +1,5 @@
-import mypielib
+import mypielib.src as src
+import mypielib.version as v
 
-print(mypielib.src())
-print(mypielib.VERSION)
-print(mypielib.gitver())
+print(src.src()
+print(v.VERSION)
