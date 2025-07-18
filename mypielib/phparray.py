@@ -2,7 +2,10 @@
 PHP array like functions
 '''
 LOWER = 0
+'''Lower case characters'''
 UPPER = 1
+'''Upper case characters'''
+
 
 def change_key_case(array:dict, case:int=LOWER):
   '''Changes the case of all keys in an dict

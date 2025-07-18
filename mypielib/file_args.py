@@ -20,6 +20,8 @@ def file_args(inargs:list[str]) -> list[str]:
   Note that if using Python's `argparse`, you can simply use the
   `fromfile_prefix_chars` option.
 
+  ```{doctest}
+  
   >>> from tempfile import NamedTemporaryFile
   >>> from mypielib.writefile import writefile
   >>> temp = NamedTemporaryFile('w')
@@ -28,6 +30,8 @@ def file_args(inargs:list[str]) -> list[str]:
   >>> from mypielib.file_args import file_args
   >>> file_args(['@'+temp.name,'blah','bloh'])
   ['this', 'is a', 'file', 'one', 'blah', 'bloh']
+
+  ```
 
 
   """
