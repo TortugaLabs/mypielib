@@ -1,9 +1,11 @@
 import re
 
-WHITESPACE = r'\W+'
+WHITESPACE = r'\s+'
 '''Regular expression for whitespace separator'''
-COMMAS = r'\W*,\W*'
+COMMAS = r'\s*,\s*'
 '''Regular expression for comma separated lists'''
+C_WS = r'\s*[,\s]\s*'
+'''Regular expression for comma/whitespace'''
 
 def force_list(val: str|list, sep = WHITESPACE) -> list:
   '''Given a variable containing a string or a list, make sure it is a list
@@ -21,10 +23,10 @@ def force_list(val: str|list, sep = WHITESPACE) -> list:
   ```{doctest}
 
   >>> import mypielib.force_list as fl
-  
-  >>> fl.force_list('this must be a list')
+
+  >>> fl.force_list('this must be a list', fl.WHITESPACE)
   ['this', 'must', 'be', 'a', 'list']
-  >>> fl.force_list(['one','two'])
+  >>> fl.force_list(['one','two'],fl.WHITESPACE)
   ['one', 'two']
   >>> fl.force_list('this must, be a list', fl.COMMAS)
   ['this must', 'be a list']
@@ -32,7 +34,12 @@ def force_list(val: str|list, sep = WHITESPACE) -> list:
   ['this must be a list']
   >>> fl.force_list('this , must be, a list', fl.COMMAS)
   ['this', 'must be', 'a list']
-  
+  >>> fl.force_list('one two thre,,four,five six', fl.C_WS)
+  ['one', 'two', 'thre', '', 'four', 'five', 'six']
+  >>> fl.force_list('one two thre,,four,five six', fl.COMMAS)
+  ['one two thre', '', 'four', 'five six']
+  >>> fl.force_list('one two thre,,four,five six', fl.WHITESPACE)
+  ['one', 'two', 'thre,,four,five', 'six']
 
   ```
 
@@ -49,3 +56,5 @@ if __name__ == '__main__':
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')
+
+
