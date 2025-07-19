@@ -1,6 +1,9 @@
 '''
-PHP array like functions
+PHP array like functions and other structure like
+stuff.
 '''
+from typing import Callable, Any
+
 LOWER = 0
 '''Lower case characters'''
 UPPER = 1
@@ -17,11 +20,14 @@ def change_key_case(array:dict, case:int=LOWER):
   Returns an dict with all keys lowercased or uppercased. Numbered
   keys are left as is.
 
+  This is equivalent to PHP's [array_change_key_case](https://www.php.net/manual/en/function.array-change-key-case.php)
+
+
   Examples:
 
   ```{doctest}
 
-  >>> import mypielib.phparray as phparray
+  >>> import mypielib.arrayu as phparray
   >>> x = {'one': 1, 'two': 2, 'three': 3, 792: 'none' }
   >>> phparray.change_key_case(x, phparray.UPPER)
   {'ONE': 1, 'TWO': 2, 'THREE': 3, 792: 'none'}
@@ -55,11 +61,13 @@ def flip(array:dict) -> dict:
   If a value has several occurrences, the latest key will be used as
   its value, and all others will be lost.
 
+  This is similar to PHP's [array_flip](https://www.php.net/manual/en/function.array-flip.php)
+
   Examples:
 
   ```{doctest}
 
-  >>> import mypielib.phparray as phparray
+  >>> import mypielib.arrayu as phparray
   >>> x = { 1: 2, 3: 4 }
   >>> phparray.flip(x)
   {2: 1, 4: 3}
@@ -85,11 +93,14 @@ def merge_recursive(*arrays:list[dict]) -> dict:
   too. If, however, the dicts have the same numeric key, the later
   value will not overwrite the original value, but will be appended.
 
+  This is similar to PHP's [array_merge_recursive](https://www.php.net/manual/en/function.array-merge-recursive.php)
+
+
   Examples:
 
   ```{doctest}
 
-  >>> import mypielib.phparray as phparray
+  >>> import mypielib.arrayu as phparray
   >>> a1 = dict(color = dict(favorite='red'), five = 5)
   >>> a2 = dict(diez = 10, color = dict(favorite='green', hated='blue'))
   >>> phparray.merge_recursive(a1, a2)
@@ -109,6 +120,80 @@ def merge_recursive(*arrays:list[dict]) -> dict:
     array1.update(array)
   return array1
 
+def traverse(data:Any, callback:Callable[[Any],None]):
+  '''
+  Recursively walk a nested structure of dicts and lists,
+  applying the `callback` function to each leaf node.
+
+  :param data: The input data structure, which may be a dict, list, or any other type.
+  :param callback: function to call
+
+  Examples:
+
+  ```{doctest}
+
+  >>> import mypielib.arrayu as arrayu
+  >>> def runme(x): print(x)
+  >>> arrayu.traverse(['one','two',{'uno': 1, 'dos': 2},[3,4]],runme)
+  one
+  two
+  1
+  2
+  3
+  4
+
+  ```
+  '''
+  if isinstance(data, dict):
+    for key, value in data.items():
+      traverse(value, callback)
+  elif isinstance(data, list):
+    for item in data:
+      traverse(item, callback)
+  else:
+    callback(data)
+
+def transform(data:list|dict, callback:Callable[[Any],Any]):
+  '''
+  Recursively walk a nested structure of dicts and lists,
+  applying a transformation to each leaf node using the `callback` function.
+
+  :param data: The input data structure, which may be a dict, list, or any other type.
+  :param callback: function to call
+
+  Examples:
+
+  ```{doctest}
+
+  >>> import mypielib.arrayu as arrayu
+  >>> def runme(x): return x.upper() if isinstance(x,str) else x
+  >>> inp = ['one','two',{'uno': 'wot', 'dos': 'not'},[3,4,'yes','maybe']]
+  >>> arrayu.transform(inp,runme)
+  >>> inp
+  ['ONE', 'TWO', {'uno': 'WOT', 'dos': 'NOT'}, [3, 4, 'YES', 'MAYBE']]
+  >>> def greeter(x,y): return f'{y} greets {x}' if isinstance(x,str) and isinstance(y,str) else x
+  >>> arrayu.transform(inp, lambda val: greeter(val, 'Alice'))
+  >>> inp
+  ['Alice greets ONE', 'Alice greets TWO', {'uno': 'Alice greets WOT', 'dos': 'Alice greets NOT'}, [3, 4, 'Alice greets YES', 'Alice greets MAYBE']]
+
+  ```
+  '''
+  if isinstance(data, dict):
+    for key in list(data.keys()):  # Avoid RuntimeError during mutation
+      if isinstance(data[key],dict) or isinstance(data[key],list):
+        transform(data[key], callback)
+      else:
+        newitem = callback(data[key])
+        if newitem != data[key]: data[key] = newitem
+  elif isinstance(data, list):
+    for i in range(len(data)):
+      if isinstance(data[i],dict) or isinstance(data[i],list):
+        transform(data[i], callback)
+      else:
+        newitem = callback(data[i])
+        if newitem != data[i]: data[i] = newitem
+  else:
+    raise TypeError('Only dict or list allowed')
 
 if __name__ == '__main__':
   import doctest
