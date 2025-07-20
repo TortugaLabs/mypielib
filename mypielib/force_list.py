@@ -7,7 +7,7 @@ COMMAS = r'\s*,\s*'
 C_WS = r'\s*[,\s]\s*'
 '''Regular expression for comma/whitespace'''
 
-def force_list(val: str|list, sep = WHITESPACE) -> list:
+def force_list(val: str|list|None, sep = WHITESPACE) -> list:
   '''Given a variable containing a string or a list, make sure it is a list
 
   :param val: value to validate
@@ -44,7 +44,9 @@ def force_list(val: str|list, sep = WHITESPACE) -> list:
   ```
 
   '''
-  if isinstance(val, str):
+  if val is None:
+    return []
+  elif isinstance(val, str):
     return re.split(sep, val)
   elif isinstance(val, list):
     return val
