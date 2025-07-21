@@ -195,6 +195,37 @@ def transform(data:list|dict, callback:Callable[[Any],Any]):
   else:
     raise TypeError('Only dict or list allowed')
 
+def add_uniq(lst:list, value:Any) -> bool:
+  '''Append a value to a list only if doesn't exist already
+
+  :param lst: List to modify
+  :param value: value to append
+  :returns: True if lst was modified, else False
+
+  Examples:
+
+  ```{doctest}
+
+  >>> import mypielib.arrayu as arrayu
+  >>> l = [ 1,2,3,4 ]
+  >>> arrayu.add_uniq(l, 3)
+  False
+  >>> l
+  [1, 2, 3, 4]
+  >>> arrayu.add_uniq(l,5)
+  True
+  >>> l
+  [1, 2, 3, 4, 5]
+  
+
+  ```
+  
+  '''
+  if value in lst: return False
+  lst.append(value)
+  return True
+
+
 if __name__ == '__main__':
   import doctest
   import os,sys
