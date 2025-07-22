@@ -1,4 +1,6 @@
-
+'''
+String utilities.
+'''
 
 def strtr(strng:str, replace:dict[str]) -> str:
   '''Replaces substrings defined in the `replace` dictionary with
@@ -17,7 +19,7 @@ def strtr(strng:str, replace:dict[str]) -> str:
   Example:
   ```{doctest}
 
-  >>> from mypielib.strtr import strtr
+  >>> from mypielib.stru import strtr
   >>> strtr('one two three',{'one': '1', 'two': '2', 'three': '3'})
   '1 2 3'
 

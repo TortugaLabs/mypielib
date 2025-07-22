@@ -7,6 +7,7 @@ docscring.  Therefore the "marker" needs to be somewhat unique.
 
 Example:
 
+```python
     |>>> import mypielib.doctesting as dt
     |>>> import testmodule
     |>>> fp = dt.testfile("__testmodule_foo_data___")
@@ -20,7 +21,7 @@ Example:
     |This is test data
     |>>> bar(dat)
     |0x45996
-    
+```
 
 '''
 try:
@@ -39,13 +40,13 @@ import sys
 def _find_docstr(marker:str, obj:Any,no_loop:set|None = None) -> str|None:
   '''Try to retrieve the doc string...'''
   if no_loop is None: no_loop = set()
-  
+
   if ismodule(obj):
     # Special handling for modules...
     if not hasattr(obj,'__file__'): return None
     for k in dir(obj):
       v = getattr(obj, k)
-      if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__): 
+      if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__):
         return v.__doc__
 
       if ismodule(v) and not (v.__name__ in no_loop):
@@ -53,12 +54,12 @@ def _find_docstr(marker:str, obj:Any,no_loop:set|None = None) -> str|None:
         txt = _find_docstr(marker,v, no_loop)
         if not txt is None: return txt
     return None
-    
+
   for k,v in obj.items():
     # ic(k,type(v))
-    if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__): 
+    if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__):
       return v.__doc__
-        
+
     if ismodule(v) and not (v.__name__ in no_loop):
       no_loop.add(v.__name__)
       txt = _find_docstr(marker,v, no_loop)
@@ -66,7 +67,7 @@ def _find_docstr(marker:str, obj:Any,no_loop:set|None = None) -> str|None:
 
   return None
 
-  
+
 def _extract_str(marker:str, text:str|None) -> str|None:
   '''Extract the test data from the docstring
   '''
@@ -105,7 +106,7 @@ def _extract_str(marker:str, text:str|None) -> str|None:
   while end < len(text):
     if text[end:end+lenprefix3] == prefixnext:
       # Found the ">>>" line
-      break  
+      break
     n = text.find('\n', end)+1
     if n == 0:
       # Reached the end of the string

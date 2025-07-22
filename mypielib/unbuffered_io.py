@@ -10,7 +10,7 @@ class Unbuffered(object):
      A lot of times, daemons will run in the background with output
      going to a file or to a pipe
 
-     This makes sure that the output is handled immediatly
+     This makes sure that the output is written immediatly
   '''
   def __init__(self, stream):
     '''Create stream

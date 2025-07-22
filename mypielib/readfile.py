@@ -9,14 +9,14 @@ def readfile(name:str) -> str:
 
   ```{doctest}
 
-  >>> from tempfile import NamedTemporaryFile
+  >>> import mypielib.doctesting as dt
   >>> from mypielib.readfile import readfile
-  >>> from mypielib.writefile import writefile
-  >>> temp = NamedTemporaryFile('w')
-  >>> writefile(temp.name,'this is a file')
-  >>> readfile(temp.name)
-  'this is a file'
-  
+  >>> fp = dt.testfile('__data_for_readfile__test__')
+  This is the contents of
+  a sample test file
+  >>> print(readfile(fp.name).rstrip())
+  This is the contents of
+  a sample test file
 
   ```
   '''
