@@ -6,7 +6,7 @@ try:
   from icecream import ic # type:ignore
   ic.configureOutput(includeContext=True)
 except ImportError: # Gracefull fallback if IceCream isn't installed
-  ic = lambda *a: None if not a else (a[0] if len(1) == 1 else a) # noqa
+  ic = lambda *a: None if not a else (a[0] if len(a) == 1 else a) # noqa
 
 import yaml # type:ignore
 
@@ -22,13 +22,13 @@ def load_yaml(afile:str, **kwargs) -> any:
 
   ```{doctest}
 
-  >>> from tempfile import NamedTemporaryFile
-  >>> from mypielib.writefile import writefile
-  >>> temp = NamedTemporaryFile('w')
-  >>> writefile(temp.name,'one: 1'+chr(10)+'two: "dos"'+chr(10)+'list: [1,2,3]'+chr(10))
-
   >>> from mypielib.yamu import load_yaml
-  >>> load_yaml(temp.name)
+  >>> import mypielib.doctesting as dt
+  >>> fp = dt.testfile('--test-file-load-yaml---')
+  one: 1
+  two: dos
+  list: [ 1, 2, 3]
+  >>> load_yaml(fp.name)
   {'one': 1, 'two': 'dos', 'list': [1, 2, 3]}
 
   

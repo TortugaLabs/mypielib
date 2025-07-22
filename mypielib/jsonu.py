@@ -8,7 +8,7 @@ try:
   from icecream import ic # type:ignore
   ic.configureOutput(includeContext=True)
 except ImportError: # Gracefull fallback if IceCream isn't installed
-  ic = lambda *a: None if not a else (a[0] if len(1) == 1 else a) # noqa
+  ic = lambda *a: None if not a else (a[0] if len(a) == 1 else a) # noqa
 
 
 def load_json(afile:str, **kwargs) -> any:
@@ -22,13 +22,11 @@ def load_json(afile:str, **kwargs) -> any:
 
   ```{doctest}
 
-  >>> from tempfile import NamedTemporaryFile
-  >>> from mypielib.writefile import writefile
-  >>> temp = NamedTemporaryFile('w')
-  >>> writefile(temp.name,'{"one": 1, "two": "dos", "list": [1,2,3]}')
-
   >>> from mypielib.jsonu import load_json
-  >>> load_json(temp.name)
+  >>> import mypielib.doctesting as dt
+  >>> fp = dt.testfile('--data-for-load_json---')
+  { "one": 1, "two": "dos", "list": [1,2,3]}
+  >>> load_json(fp.name)
   {'one': 1, 'two': 'dos', 'list': [1, 2, 3]}
 
   ```
