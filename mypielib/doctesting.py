@@ -1,47 +1,26 @@
 '''
-Build test data from a docstring|doctest
+Tools for running doctests
 
+Let's you prepare input files and/or strings by examining docstrings.
+It will use the passed "marker" string to identify the right
+docscring.  Therefore the "marker" needs to be somewhat unique.
 
-  It will search for the calling frame locals for the estring in
-  "marker" among the available docstrings.
+Example:
 
-Limitations: only looks for doc strings on toplevel locals, and 
-recurses into modules.
-
-```{doctest}
-
-  >>> import mypielib.doctesting as dt
-  >>> fp = dt.testfile('lskdkdjcmcfddhhvkkdldd')
-  Doc testing 1
-  >>> t = dt.teststr('lsdfffdskddfkdjcmckkdldd')
-  Doc testing 2
-  >>> print(t.rstrip())
-  Doc testing 2
-  >>> t = dt.teststr('randomclsdkt')
-  Doc testing 3
-  >>> print(t.rstrip())
-  Doc testing 3
-
-```
-  Generate test data from docstrings
-
-  It will first attemt to use __file__, and it it
-  doesn't exists it will check all the top modules
-  available in the calling scope.
-
-  For this to work the doctest string must contain:
-
-  ))) import module.being.tested as my_module
-  ))) ifp = testdata('___MY_FILE_UNIQUE_EOF___')
-  content of test data
-  <BLANKLINE>
-  this is atest
-  ___MY_FILE_UNIQUE_EOF___
-
-  `testdata` will use the inspect module to find modules and search
-  for the ___MY_FILE_UNIQUE_EOF__.
-
-
+    |>>> import mypielib.doctesting as dt
+    |>>> import testmodule
+    |>>> fp = dt.testfile("__testmodule_foo_data___")
+    |This is the content for foo function
+    |it can contain multiple lines
+    |<BLANKSPACE>
+    |>>> foo(fp.name)
+    |True
+    |
+    |>>> dat = dt.teststr("__testmodule_bar_data___")
+    |This is test data
+    |>>> bar(dat)
+    |0x45996
+    
 
 '''
 try:
