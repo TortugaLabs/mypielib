@@ -392,9 +392,6 @@ def encrypt(clear):
   Encrypts a password using a VNC compatible format.
 
 
-  NOTE: when importing `mypielib` this function is
-  available as `vncrypt`
-
   Examples:
 
   ```{doctest}

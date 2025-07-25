@@ -1,5 +1,12 @@
 '''
 Report my module version information
+
+It defines two values:
+
+- `VERSION` : module version (using git describe or release tag)
+- `SETUP_VERSION` : version string suitable for `setuptools`
+   If the version string doesn't match `setuptools` rules, then
+   it is set to `None`.
 '''
 import os
 import re
@@ -50,17 +57,17 @@ def _get_git_description() -> str:
   return '$unknown$'
 
 VERSION = _get_git_description()
-SETUP_VERSION = VERSION
-try:
-  # Attempt to create a Version object; this will validate the version string
-  Version(SETUP_VERSION)
-except InvalidVersion:
-  # If an InvalidVersion exception is raised, the version string is invalid
-  SETUP_VERSION = None
-
-
 '''git based version'''
-
+if VCHECK:
+  SETUP_VERSION = VERSION
+  try:
+    # Attempt to create a Version object; this will validate the version string
+    Version(SETUP_VERSION)
+  except InvalidVersion:
+    # If an InvalidVersion exception is raised, the version string is invalid
+    SETUP_VERSION = None
+else:
+  SETUP_VERSION = None
 
 if __name__ == '__main__':
   print('VERSION',VERSION)
