@@ -38,6 +38,30 @@ def strtr(strng:str, replace:dict[str]) -> str:
       i += 1
   return ''.join(buf)
 
+def ws_norm(inp:str) -> str:
+  '''Normalize whitespace
+
+  :param inp: input string
+  :returns: string with whitespaces made consistent.
+
+  Example:
+
+  ```{doctest}
+
+  >>> from mypielib.stru import ws_norm
+  >>> ws_norm('Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...')
+  'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
+  >>> ws_norm('  Neque    porro    quisquam          est    qui ')
+  'Neque porro quisquam est qui'
+  >>> ws_norm('           ')
+  ''
+
+  ```
+
+  '''
+  return ' '.join(inp.split())
+
+
 if __name__ == '__main__':
   import doctest
   import os,sys
