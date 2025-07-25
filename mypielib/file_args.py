@@ -20,8 +20,8 @@ def file_args(inargs:list[str]) -> list[str]:
   Note that if using Python's `argparse`, you can simply use the
   `fromfile_prefix_chars` option.
 
-  ```{donttest}
-  
+  ```{doctest}
+
   >>> from mypielib.file_args import file_args
   >>> import mypielib.doctesting as dt
   >>> fp = dt.testfile('---data-for-file_args---')
@@ -29,7 +29,7 @@ def file_args(inargs:list[str]) -> list[str]:
   one
   >>> file_args(['@'+fp.name,'blah','bloh'])
   ['this', 'is a', 'file', 'one', 'blah', 'bloh']
-  
+
 
   ```
 
