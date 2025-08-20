@@ -240,7 +240,8 @@ def sort_structure(obj:Any) -> Any:
 
     ```{doctest}
 
-    >>> sort_structure({
+  >>> import mypielib.arrayu as arrayu
+    >>> arrayu.sort_structure({
     ...    'user': {'name': 'Alice', 'age': 30},
     ...    'roles': ['editor', 'admin']
     ... }) # doctest: +NORMALIZE_WHITESPACE
