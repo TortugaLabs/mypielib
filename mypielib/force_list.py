@@ -7,6 +7,28 @@ COMMAS = r'\s*,\s*'
 C_WS = r'\s*[,\s]\s*'
 '''Regular expression for comma/whitespace'''
 
+from typing import Any
+
+def make_list(val:Any) -> list[Any]:
+  '''Given a value or object, make sure it is a list
+
+  :param val: value to validate
+  :returns: list
+
+  Examples:
+
+  ```{doctest}
+  >>> import mypielib.force_list as fl
+  >>> fl.make_list([1,2,3])
+  [1, 2, 3]
+  >>> fl.make_list({'roller': 'blade'})
+  [{'roller': 'blade'}]
+
+  ```
+  '''
+  if isinstance(val,list): return val
+  return [val]
+
 def force_list(val: str|list|None, sep = C_WS) -> list:
   '''Given a variable containing a string or a list, make sure it is a list
 
@@ -23,7 +45,6 @@ def force_list(val: str|list|None, sep = C_WS) -> list:
   ```{doctest}
 
   >>> import mypielib.force_list as fl
-
   >>> fl.force_list('this must be a list', fl.WHITESPACE)
   ['this', 'must', 'be', 'a', 'list']
   >>> fl.force_list(['one','two'],fl.WHITESPACE)
