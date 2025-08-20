@@ -3,6 +3,7 @@ PHP array like functions and other structure like
 stuff.
 '''
 from typing import Callable, Any
+import sys
 
 LOWER = 0
 '''Lower case characters'''
@@ -216,19 +217,52 @@ def add_uniq(lst:list, value:Any) -> bool:
   True
   >>> l
   [1, 2, 3, 4, 5]
-  
+
 
   ```
-  
+
   '''
   if value in lst: return False
   lst.append(value)
   return True
 
+class LtPython3_7Error(Exception):
+  pass
+
+def sort_structure(obj:Any) -> Any:
+    """
+    Recursively sort dictionaries but preserve list order.
+
+    :param obj: structure to sort
+    :returns: sorted structure
+
+    Examples:
+
+    ```{doctest}
+
+    >>> sort_structure({
+    ...    'user': {'name': 'Alice', 'age': 30},
+    ...    'roles': ['editor', 'admin']
+    ... }) # doctest: +NORMALIZE_WHITESPACE
+    {'roles': ['editor', 'admin'],
+     'user': {'age': 30, 'name': 'Alice'}}
+
+    ```
+    """
+    if sys.version_info < (3,7):
+      raise LtPython3_7Error('Calling sort_structure requires version Python 3.7 or newer!\n')
+    if isinstance(obj, dict):
+      return {k: sort_structure(obj[k]) for k in sorted(obj)}
+    elif isinstance(obj, list):
+      return [sort_structure(item) for item in obj]
+    else:
+      return obj
+
+
 
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')
