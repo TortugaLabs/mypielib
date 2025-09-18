@@ -217,10 +217,8 @@ def add_uniq(lst:list, value:Any) -> bool:
   True
   >>> l
   [1, 2, 3, 4, 5]
-
-
+  
   ```
-
   '''
   if value in lst: return False
   lst.append(value)
@@ -264,6 +262,7 @@ def sort_structure(obj:Any) -> Any:
 if __name__ == '__main__':
   import doctest
   import os
+
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

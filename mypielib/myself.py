@@ -23,7 +23,6 @@ def myself(climb=1):
   >>> type(trace.filename)
   <class 'str'>
 
-
   ```
 
   '''
