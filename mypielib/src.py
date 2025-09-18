@@ -1,9 +1,10 @@
 #python3
 from inspect import getframeinfo, stack
 
-def src():
+def src(climb=1):
   '''Return file,line of caller
 
+  :param climb: Defaults to 1, how far up the stack to climb
   :returns (str,int): file and line of caller
 
   Example:
@@ -18,7 +19,7 @@ def src():
 
   ```
   '''
-  caller = getframeinfo(stack()[1][0])
+  caller = getframeinfo(stack()[climb][0])
   return (caller.filename,caller.lineno)
 
 if __name__ == '__main__':

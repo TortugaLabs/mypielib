@@ -1,9 +1,10 @@
 #python3
 from inspect import getframeinfo, stack
 
-def myself():
+def myself(climb=1):
   '''Return information of the caller
 
+  :param climb: Defaults to 1, how far up the stack to climb
   :returns object: with attributes
 
   Among the attributes returned:
@@ -13,7 +14,6 @@ def myself():
   - function
   - code_context : list of lines being executed.
 
-
   ```{doctest}
 
   >>> from mypielib.myself import myself
@@ -22,12 +22,11 @@ def myself():
   1
   >>> type(trace.filename)
   <class 'str'>
-  
 
   ```
 
   '''
-  caller = getframeinfo(stack()[1][0])
+  caller = getframeinfo(stack()[climb][0])
   return caller
 
   ...

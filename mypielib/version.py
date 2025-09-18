@@ -42,16 +42,22 @@ def _get_git_description() -> str:
         ['git', 'describe'],
         cwd=script_dir,           # Set the current working directory
         stdout=subprocess.PIPE,   # Capture standard output
+        stderr=subprocess.PIPE,   # Capture standard error
         text=True,                # Decode bytes to string
   )
+  if result.stderr != '' and 'DEBUG' in os.environ: sys.stderr.write(result.stderr)
+    
+  
   if result.returncode == 0: return result.stdout.strip()
 
   result = subprocess.run(
         ['git', 'describe','--always'],
         cwd=script_dir,           # Set the current working directory
         stdout=subprocess.PIPE,   # Capture standard output
+        stderr=subprocess.PIPE,   # Capture standard error
         text=True,                # Decode bytes to string
   )
+  if result.stderr != '' and 'DEBUG' in os.environ: sys.stderr.write(result.stderr)
   if result.returncode == 0: return f'$git:{result.stdout.strip()}$'
 
   return '$unknown$'
