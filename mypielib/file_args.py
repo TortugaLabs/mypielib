@@ -41,7 +41,7 @@ def file_args(inargs:list[str]) -> list[str]:
     arg = inargs[i]
     if arg.startswith('@'):
       filename = arg[1:] if arg != '@' else inargs[i+1] if i+1 < len(inargs) else None
-      if (not filename is None) and os.path.isfile(filename):
+      if (filename is not None) and os.path.isfile(filename):
         if len(outargs) == 0: outargs = inargs[:i]
         with open(filename,'r') as fp:
           outargs.extend(shlex.split(fp.read(), True, True))
@@ -56,7 +56,8 @@ def file_args(inargs:list[str]) -> list[str]:
 
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
+  import sys
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

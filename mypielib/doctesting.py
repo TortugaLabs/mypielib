@@ -36,58 +36,77 @@ from tempfile import NamedTemporaryFile
 
 import sys
 
+def _handle_module(marker:str, obj:Any,no_loop:set) -> str|None:
+  # Special handling for modules...
+  if not hasattr(obj,'__file__'): return None
+  for k in dir(obj):
+    v = getattr(obj, k)
+    if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__):
+      return v.__doc__
+
+    if ismodule(v) and v.__name__ not in no_loop:
+      no_loop.add(v.__name__)
+      txt = _find_docstr(marker,v, no_loop)
+      if txt is not None: return txt
+  return None
 
 def _find_docstr(marker:str, obj:Any,no_loop:set|None = None) -> str|None:
   '''Try to retrieve the doc string...'''
   if no_loop is None: no_loop = set()
 
   if ismodule(obj):
-    # Special handling for modules...
-    if not hasattr(obj,'__file__'): return None
-    for k in dir(obj):
-      v = getattr(obj, k)
-      if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__):
-        return v.__doc__
-
-      if ismodule(v) and not (v.__name__ in no_loop):
-        no_loop.add(v.__name__)
-        txt = _find_docstr(marker,v, no_loop)
-        if not txt is None: return txt
-    return None
+    return _handle_module(marker, obj, no_loop)
 
   for k,v in obj.items():
     # ic(k,type(v))
     if hasattr(v,'__doc__') and isinstance(v.__doc__, str) and (marker in v.__doc__):
       return v.__doc__
 
-    if ismodule(v) and not (v.__name__ in no_loop):
+    if ismodule(v) and v.__name__ not in no_loop:
       no_loop.add(v.__name__)
       txt = _find_docstr(marker,v, no_loop)
-      if not txt is None: return txt
+      if txt is not None: return txt
 
   return None
 
 
-def _extract_str(marker:str, text:str|None) -> str|None:
-  '''Extract the test data from the docstring
-  '''
-  if text is None: return text
-  # ic(marker,text)
+class BadDocTestStringError(Exception):
+  ...
+
+def _find_start(marker:str, text:str|None) -> tuple[int,int]:
+  if text is None: raise BadDocTestStringError('input text is None')
 
   # Determine the exact location of marker
   mrkrpos = text.find(marker)
   bol = text.rfind('\n',0,mrkrpos)+1
   start = text.find('\n', mrkrpos + len(marker) + 2)+1
   # ic(mrkrpos, bol, start)
-  if start == 0: return None
+  if start == 0: raise BadDocTestStringError('start is not good')
 
+  return start,bol
+
+def _calc_indentation(text:str, start:int, bol:int) -> str:
   # Calculate indentation...
   # ic(text[bol:start])
   i = bol
   while i < start and text[i].isspace(): i += 1
   prefix = text[bol:i]
   # ic(prefix)
-  if prefix != '' and not prefix.isspace(): return None
+  if prefix != '' and not prefix.isspace():
+    raise BadDocTestStringError('Bad prefix calculation')
+  return prefix
+
+def _extract_str(marker:str, text:str|None) -> str|None:
+  '''Extract the test data from the docstring
+  '''
+  try:
+    # Find the start
+    start, bol = _find_start(marker,text)
+    # Calculate indentation...
+    prefix = _calc_indentation(text, start, bol)
+
+  except BadDocTestStringError:
+    return None
 
   # Remove continuation lines...
   lenprefix3 = len(prefix)+3
@@ -192,7 +211,8 @@ def testfile(marker:str) -> TextIO|None:
 
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
+  import sys
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

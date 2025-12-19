@@ -10,6 +10,7 @@ import argparse
 import os
 import subprocess
 import sys
+from typing import TextIO
 
 from mypielib.version import VERSION
 
@@ -75,30 +76,30 @@ def xxargs(args:argparse.Namespace):
   prefix = args.cmd if len(args.cmd) else ['echo']
 
   if args.delimiter is None:
-    cmd_queue = [ ]
     last_ch = ' '
-    while (ch := args.arg_file.read(1)) != '':
-      if ch.isspace():
-        if not args.max_args is None and len(cmd_queue) == args.max_args:
-          exec_cmd(prefix + cmd_queue, input_fh, args.verbose)
-          cmd_queue = [ '' ]
-      else:
-        if last_ch.isspace(): cmd_queue.append('')
-        cmd_queue[-1] += ch
-      last_ch = ch
-    ic(cmd_queue)
+    validate_ch = lambda ch: ch.isspace()
+    cmd_queue = [ ]
   else:
+    last_ch = None
+    validate_ch = lambda ch: ch == args.delimiter
     cmd_queue = [ '' ]
-    while (ch := args.arg_file.read(1)) != '':
-      if args.delimiter == ch:
-        if not args.max_args is None and len(cmd_queue) == args.max_args:
-          exec_cmd(prefix + cmd_queue, input_fh, args.verbose)
-          cmd_queue = ['']
-        cmd_queue.append('')
-      else:
-        cmd_queue[-1] += ch
 
-  if len(cmd_queue) > 1 or cmd_queue[0] != '':
+  while (ch := args.arg_file.read(1)) != '':
+    ic(ch)
+    if validate_ch(ch):
+      if args.max_args is not None and len(cmd_queue) == args.max_args:
+        exec_cmd(prefix + cmd_queue, input_fh, args.verbose)
+        cmd_queue = [ '' ]
+      if args.delimiter is not None:
+        ic(last_ch)
+        cmd_queue.append('')
+      ic(ch, cmd_queue)
+    else:
+      if args.delimiter is None and validate_ch(last_ch): cmd_queue.append('')
+      cmd_queue[-1] += ch
+    last_ch = ch
+
+  if len(cmd_queue):
     exec_cmd(prefix + cmd_queue, input_fh, args.verbose)
   sys.exit(0)
 

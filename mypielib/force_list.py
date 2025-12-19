@@ -1,4 +1,5 @@
 import re
+from typing import Any
 
 WHITESPACE = r'\s+'
 '''Regular expression for whitespace separator'''
@@ -7,7 +8,6 @@ COMMAS = r'\s*,\s*'
 C_WS = r'\s*[,\s]\s*'
 '''Regular expression for comma/whitespace'''
 
-from typing import Any
 
 def make_list(val:Any) -> list[Any]:
   '''Given a value or object, make sure it is a list
@@ -75,7 +75,8 @@ def force_list(val: str|list|None, sep = C_WS) -> list:
 
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
+  import sys
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

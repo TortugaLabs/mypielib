@@ -1,6 +1,5 @@
 #python
 import os
-import sys
 
 _saved_fds = []
 '''Used internally to save fds by null_io'''
@@ -29,7 +28,7 @@ def null_io(close:bool = False, keep_stderr:bool = False):
     else:
       _saved_fds[0].close()
       _saved_fds[1].close()
-      if not _saved_fds[2] is None: _saved_fds[2].close()
+      if _saved_fds[2] is not None: _saved_fds[2].close()
       _saved_fds[3].close()
     return
 
@@ -61,5 +60,5 @@ def denull_io():
 
   os.dup2(_saved_fds[0], 0)
   os.dup2(_saved_fds[1], 1)
-  if not _saved_fds[2] is None: os.dup2(_saved_fds[2], 2)
+  if _saved_fds[2] is not None: os.dup2(_saved_fds[2], 2)
 
