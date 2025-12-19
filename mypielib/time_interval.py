@@ -1,5 +1,17 @@
 
 
+def _tiv_segment(itxt:str, secs:int, interval:int, one:str, many:str) -> tuple[str,int]:
+  i, secs = divmod(secs , interval)
+  tx = one if i == 1 else many.format(i)
+  if itxt:
+    if i == 0:
+      return itxt
+    else:
+      return itxt + ', ' + tx, secs
+  else:
+    return tx, secs
+
+
 def time_interval(secs:int, rough:bool = False) -> str:
   '''
   Converts a value in seconds into a string describing the time interval
@@ -31,56 +43,39 @@ def time_interval(secs:int, rough:bool = False) -> str:
   'one hour'
   >>> time_interval(86400*5+3945)
   '5 days, one hour, 5 minutes, 45 seconds'
+  >>> time_interval(86400*1000+3945)
+  '1,000 days, one hour, 5 minutes, 45 seconds'
+  >>> time_interval(3600+20)
+  'one hour, 20 seconds'
+  >>> time_interval(3600+20, True)
+  'one hour'
 
   ```
   '''
-  q = ''
   if secs >= 86400:
-    i = int(secs / 86400)
-    if i == 1:
-      txt = 'one day'
-    else:
-      txt = f'{i:,} days'
+    txt, secs = _tiv_segment('', secs, 86400, 'one day', '{:,} days')
     if rough: return txt
-    secs = secs % 86400
-    q = ', '
   else:
     txt = ''
-
   if secs >= 3600:
-    i = int(secs/3600)
-    if i == 1:
-      txt += q + 'one hour'
-    else:
-      txt += q + f'{i} hours'
+    txt, secs = _tiv_segment(txt, secs, 3600, 'one hour', '{:,} hours')
     if rough: return txt
-    secs = secs % 3600
-    if q == '': q = ', '
-
   if secs >= 60:
-    i = int(secs/60)
-    if i == 1:
-      txt += q + 'one minute'
-    else:
-      txt += q + f'{i} minutes'
+    txt, secs = _tiv_segment(txt, secs, 60, 'one minute', '{:,} minutes')
     if rough: return txt
-    secs = secs % 60
-    if q == '': q = ', '
 
-  if rough: return 'zero seconds' if secs == 0  else 'a few seconds'
-
-  if secs == 1:
-    txt += q + 'one second'
-  elif secs > 0:
-    txt += q + f'{secs} seconds'
-  elif secs == 0 and txt == '':
+  if secs == 0:
+    if txt: return txt
     return 'zero seconds'
+  if rough: return 'a few seconds'
 
+  txt, secs = _tiv_segment(txt, secs, 1, 'second', '{:,} seconds')
   return txt
 
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
+  import sys
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

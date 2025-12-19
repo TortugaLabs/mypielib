@@ -3,7 +3,6 @@
 #
 import os
 import sys
-import syslog
 
 def _io_syslog(fh,tag):
   """

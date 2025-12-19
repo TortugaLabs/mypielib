@@ -9,7 +9,6 @@ It defines two values:
    it is set to `None`.
 '''
 import os
-import re
 import sys
 import subprocess
 try:
@@ -19,7 +18,7 @@ except ImportError:  # Graceful fallback if IceCream isn't installed.
 
 try:
   from packaging.version import Version, InvalidVersion
-  VCHECK = not 'NO_VCHECK' in os.environ
+  VCHECK = 'NO_VCHECK' not in os.environ
 except ImportError:
   VCHECK = False
 

@@ -44,14 +44,15 @@ def ts_print(msg:str, io=None):
   :param str msg: Message to display
   :param file-handle io: If specified, output file handle, otherwise uses stderr
   '''
-  if mode is None:  io = sys.stderr
+  if io is None:  io = sys.stderr
 
   prefix = "[" + time.strftime(TIMESTAMP_FORMAT) + "]:"
   io.write(prefix + msg + "\n")
 
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
+  import sys
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

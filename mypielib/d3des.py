@@ -41,7 +41,7 @@ Copyright (c) 1988,1989,1990,1991,1992 by Richard Outerbridge.
 
 '''
 
-
+import base64
 from struct import pack, unpack
 
 
@@ -109,7 +109,7 @@ def _deskey(key, decrypt):      # Thanks to James Gillogly & Phil Karn!
     kn = [0]*32
 
     for j in range(56):
-        l = _pc1[j]
+        l = _pc1[j] # noqa: E741
         m = l & 0o7
         if key[l >> 3] & _bytebit[m]:
             pc1m[j] = 1
@@ -124,13 +124,13 @@ def _deskey(key, decrypt):      # Thanks to James Gillogly & Phil Karn!
         n = m + 1
         kn[m] = kn[n] = 0
         for j in range(28):
-            l = j + _totrot[i]
+            l = j + _totrot[i] # noqa: E741
             if l < 28:
                 pcr[j] = pc1m[l]
             else:
                 pcr[j] = pc1m[l - 28]
         for j in range(28, 56):
-            l = j + _totrot[i]
+            l = j + _totrot[i] # noqa: E741
             if l < 56:
                 pcr[j] = pc1m[l]
             else:
@@ -380,7 +380,6 @@ def _desfunc(block, keys):
     right &= 0xffffffff
     return pack('>II', right, leftt)
 
-import base64
 
 def encrypt(clear):
   '''
@@ -416,7 +415,8 @@ def encrypt(clear):
 # test
 if __name__ == '__main__':
   import doctest
-  import os,sys
+  import os
+  import sys
   sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
   failures, tests = doctest.testmod()
   print(f'Failures: {failures} of {tests} tests')

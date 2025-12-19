@@ -1,5 +1,5 @@
 # Shared workflow
-name: doctest
+name: doctest and other qa
 
 on:
   # Runs on pushes targeting the default branch
@@ -24,5 +24,9 @@ jobs:
         cache: pip
     - name: Install sphinx dependencies
       run: pip install -r docs/requirements.txt -r requirements.txt
+    - name: Limiting cyclomatic complexity
+      run: cyclo mypielib
+    - name: Lint check
+      run: ruff check mypielib
     - name: Run doctest
       run: make -C docs doctest
