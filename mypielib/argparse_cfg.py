@@ -32,7 +32,7 @@ Examples:
 ...      ]
 ...    ),
 ...    ],prog='myprogram',exit_on_error = False)
->>> parser.print_help()
+>>> parser.print_help()   # doctest: +NORMALIZE_WHITESPACE
 usage: myprogram [-h] [-V] [--timeout TIMEOUT] (--send | --recv) {list,ls,ll} ...
 <BLANKLINE>
 positional arguments:
