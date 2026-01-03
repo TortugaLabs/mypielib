@@ -1,6 +1,7 @@
 # --only-binary=cryptography
 
 # pyyaml # This is an optional requirement
+# argcomplete # This is an optional requirement
 
 # QA
 ruff

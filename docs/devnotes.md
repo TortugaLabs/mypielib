@@ -25,5 +25,5 @@ branch would be enough.
   [gh]: https://github.com
   [vg]: https://setuptools.pypa.io/en/latest/userguide/distribution.html
   [st]: https://github.com/pypa/setuptools
-  [plp440]: https://peps.python.org/pep-0440/
-  
+  [pep440]: https://peps.python.org/pep-0440/
+

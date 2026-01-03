@@ -17,6 +17,7 @@ def make_parser():
   ''' Command Line Interface argument parser '''
   name = sys.argv[0]
   if os.path.basename(name) == '__main__.py': name = os.path.basename(os.path.dirname(name))
+  if 'sphinx' in sys.argv[0]: os.environ['NO_COLOR'] = '1'
 
   cli = argparse.ArgumentParser(prog=name, description='Command line utilities')
   cli.add_argument('-V','--version', action='version', version=f'%(prog)s {VERSION}')

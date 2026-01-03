@@ -1,5 +1,5 @@
-# Shared workflow
-name: doctest and other qa
+# Quality Assurance
+name: doctest and other qa tasks
 
 on:
   # Runs on pushes targeting the default branch
