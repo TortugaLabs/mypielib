@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   doctest:
-    uses: ./.github/workflows/doctest.yml
+    uses: ./.github/workflows/qa.yml
   build:
     runs-on: ubuntu-latest
     needs: doctest
