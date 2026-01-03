@@ -17,7 +17,7 @@ Examples:
 ...                             action='version',
 ...                             version=f'%(prog)s {VERSION}')),
 ...    (['--timeout'], dict(help='Time out value', type=int,
-...                                 completer=hint_factory('SECONDS'))),
+...                                 completer=argparse_cfg.hint_factory('SECONDS'))),
 ...    ([argparse_cfg.CFG.GROUP, 'modes', 'parser mode'], [
 ...         (argparse_cfg.CFG.REQ_MXGROUP, [
 ...            ('--send', dict(help='Send mode', dest='mode', action='store_const', const='send')),
