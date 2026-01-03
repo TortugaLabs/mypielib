@@ -13,8 +13,6 @@ import sys
 
 from mypielib.version import VERSION
 
-from mypielib.writefile import writefile
-
 def make_parser():
   ''' Command Line Interface argument parser '''
   name = sys.argv[0]
