@@ -13,12 +13,16 @@ import sys
 
 from mypielib.version import VERSION
 
+from mypielib.writefile import writefile
+
 def make_parser():
   ''' Command Line Interface argument parser '''
   name = sys.argv[0]
   if os.path.basename(name) == '__main__.py': name = os.path.basename(os.path.dirname(name))
 
-  cli = argparse.ArgumentParser(prog=name, description='Command line utilities')
+  cli = argparse.ArgumentParser(prog=name, description='Command line utilities',
+      color = False if 'sphinx' in sys.argv[0] else True
+    )
   cli.add_argument('-V','--version', action='version', version=f'%(prog)s {VERSION}')
 
   subs = cli.add_subparsers(dest='command', help='Available subcommands')
