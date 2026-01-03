@@ -141,9 +141,14 @@ def _argparser_factory(kwargs:dict[Any]) -> argparse.ArgumentParser:
   '''
   for kw,val in [
           ('fromfile_prefix_chars', '@'),
-          ('suggest_on_error', True),
         ]:
     if kw not in kwargs: kwargs[kw] = val
+  if sys.version_info >= (3,14,0):
+    for kw,val in [
+            ('suggest_on_error', True),
+          ]:
+      if kw not in kwargs: kwargs[kw] = val
+
   skip_complete = False
   if CFG.DONT_COMPLETE in kwargs:
     skip_complete = kwargs[CFG.DONT_COMPLETE]
